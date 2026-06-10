@@ -1,6 +1,10 @@
 package zenquotes
 
-import "perchinka.github.io/spelling-gopher/internal/domain/quote"
+import (
+	"unicode/utf8"
+
+	"perchinka.github.io/spelling-gopher/internal/domain/quote"
+)
 
 type zenQuoteDTO struct {
 	Quote  string `json:"q"`
@@ -11,6 +15,6 @@ func toDomain(dto zenQuoteDTO) quote.Quote {
 	return quote.Quote{
 		Quote:          dto.Quote,
 		Author:         dto.Author,
-		CharacterCount: len(dto.Quote),
+		CharacterCount: utf8.RuneCountInString(dto.Quote),
 	}
 }
