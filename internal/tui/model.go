@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"charm.land/bubbles/v2/spinner"
 	tea "charm.land/bubbletea/v2"
 	"perchinka.github.io/spelling-gopher/internal/domain/quote"
 )
@@ -10,19 +11,23 @@ type Model struct {
 	quote        quote.Quote
 	loading      bool
 	err          error
+
+	spinner spinner.Model
 }
 
 func New(quoteService *quote.Service) Model {
+	s := spinner.New(spinner.WithSpinner(spinner.Globe))
 	return Model{
 		quoteService: quoteService,
 		quote:        quote.Quote{Quote: "Nothing here yet", Author: "Me", CharacterCount: 0},
-		loading:      false,
+		loading:      true,
 		err:          nil,
+		spinner:      s,
 	}
 }
 
 func (m Model) Init() tea.Cmd {
-	return fetchQuote(m.quoteService)
+	return tea.Batch(fetchQuote(m.quoteService), m.spinner.Tick)
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -33,8 +38,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "r":
 			m.loading = true
-			return m, fetchQuote(m.quoteService)
+			return m, tea.Batch(fetchQuote(m.quoteService), m.spinner.Tick)
 		}
+	case spinner.TickMsg:
+		if !m.loading {
+			return m, nil
+		}
+		var cmd tea.Cmd
+		m.spinner, cmd = m.spinner.Update(msg)
+		return m, cmd
 	case quoteMsg:
 		m.quote, m.loading, m.err = msg.quote, false, nil
 	case errMsg:
@@ -44,5 +56,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() tea.View {
-	return tea.NewView(m.quote.Quote)
+	if m.loading {
+		return tea.NewView(m.spinner.View() + " loading...")
+	}
+	if m.err != nil {
+		return tea.NewView("error: " + m.err.Error())
+	}
+	return tea.NewView(m.quote.Quote + "\n\t\t---" + m.quote.Author)
 }
