@@ -2,6 +2,7 @@ package zenquotes
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -16,7 +17,7 @@ func TestRepository_Random(t *testing.T) {
 		status  int
 		body    string
 		want    quote.Quote
-		wantErr bool
+		wantErr error
 	}{
 		{
 			name:   "valid single quote",
@@ -24,9 +25,9 @@ func TestRepository_Random(t *testing.T) {
 			body:   `[{"q":"be water","a":"Bruce Lee","c":"8"}]`,
 			want:   quote.Quote{Quote: "be water", Author: "Bruce Lee", CharacterCount: 8},
 		},
-		{name: "empty array", status: 200, body: `[]`, wantErr: true},
-		{name: "rate limited", status: 429, body: `Too Many Requests`, wantErr: true},
-		{name: "malformed json", status: 200, body: `{not json`, wantErr: true},
+		{name: "empty array", status: 200, body: `[]`, wantErr: ErrEmptyResponse},
+		{name: "rate limited", status: 429, body: `Too Many Requests`, wantErr: ErrUnexpectedStatus},
+		{name: "malformed json", status: 200, body: `{not json`, wantErr: ErrInvalidResponse},
 	}
 
 	for _, tt := range tests {
@@ -41,10 +42,10 @@ func TestRepository_Random(t *testing.T) {
 			repo.baseURL = srv.URL
 
 			got, err := repo.Random(context.Background())
-			if (err != nil) != tt.wantErr {
-				t.Fatalf("err = %v, wantErr %v", err, tt.wantErr)
+			if !errors.Is(err, tt.wantErr) {
+				t.Fatalf("err = %v, want %v", err, tt.wantErr)
 			}
-			if !tt.wantErr && got != tt.want {
+			if tt.wantErr == nil && got != tt.want {
 				t.Errorf("got %+v, want %+v", got, tt.want)
 			}
 		})
