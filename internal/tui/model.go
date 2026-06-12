@@ -19,7 +19,7 @@ func New(quoteService *quote.Service) Model {
 	s := spinner.New(spinner.WithSpinner(spinner.Globe))
 	return Model{
 		quoteService: quoteService,
-		quote:        quote.Quote{Quote: "Nothing here yet", Author: "Me", CharacterCount: 0},
+		quote:        quote.Quote{Text: "Nothing here yet", Author: "Me", CharacterCount: 0},
 		loading:      true,
 		err:          nil,
 		spinner:      s,
@@ -62,5 +62,5 @@ func (m Model) View() tea.View {
 	if m.err != nil {
 		return tea.NewView("error: " + m.err.Error())
 	}
-	return tea.NewView(m.quote.Quote + "\n\t\t---" + m.quote.Author)
+	return tea.NewView(m.quote.Text + "\n\t\t---" + m.quote.Author)
 }

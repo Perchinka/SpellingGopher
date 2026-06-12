@@ -1,7 +1,7 @@
 package quote
 
 type Quote struct {
-	Quote          string
+	Text           string
 	Author         string
 	CharacterCount int
 }

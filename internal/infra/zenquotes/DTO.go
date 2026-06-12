@@ -13,7 +13,7 @@ type zenQuoteDTO struct {
 
 func toDomain(dto zenQuoteDTO) quote.Quote {
 	return quote.Quote{
-		Quote:          dto.Quote,
+		Text:           dto.Quote,
 		Author:         dto.Author,
 		CharacterCount: utf8.RuneCountInString(dto.Quote),
 	}

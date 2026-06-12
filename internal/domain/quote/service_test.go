@@ -28,8 +28,8 @@ func TestService_Random(t *testing.T) {
 	}{
 		{
 			name: "returns quote from repo",
-			repo: &fakeRepo{quote: Quote{Quote: "be water", Author: "Lee"}},
-			want: Quote{Quote: "be water", Author: "Lee"},
+			repo: &fakeRepo{quote: Quote{Text: "be water", Author: "Lee"}},
+			want: Quote{Text: "be water", Author: "Lee"},
 		},
 		{
 			name:    "propagates repo error",
@@ -53,7 +53,7 @@ func TestService_Random(t *testing.T) {
 }
 
 func TestService_Random_CallsRepoOnce(t *testing.T) {
-	repo := &fakeRepo{quote: Quote{Quote: "be water"}}
+	repo := &fakeRepo{quote: Quote{Text: "be water"}}
 	svc := NewService(repo)
 
 	if _, err := svc.Random(context.Background()); err != nil {

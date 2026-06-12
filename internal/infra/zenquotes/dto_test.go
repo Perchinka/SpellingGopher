@@ -18,8 +18,8 @@ func TestToDomain(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := toDomain(tt.dto)
 
-			if got.Quote != tt.dto.Quote {
-				t.Errorf("Quote = %q, want %q", got.Quote, tt.dto.Quote)
+			if got.Text != tt.dto.Quote {
+				t.Errorf("Quote = %q, want %q", got.Text, tt.dto.Quote)
 			}
 			if got.Author != tt.dto.Author {
 				t.Errorf("Author = %q, want %q", got.Author, tt.dto.Author)
