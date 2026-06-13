@@ -21,13 +21,9 @@ func (m resultsModel) Init() tea.Cmd {
 }
 
 func (m resultsModel) Update(msg tea.Msg) (resultsModel, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyPressMsg:
-		switch msg.String() {
-		case "q", "ctrl+c":
-			return m, tea.Quit
-		}
-	}
+	// switch msg := msg.(type) {
+	// case tea.KeyPressMsg:
+	// }
 	return m, nil
 }
 
