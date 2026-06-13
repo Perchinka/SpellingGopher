@@ -4,6 +4,7 @@ import (
 	"context"
 
 	tea "charm.land/bubbletea/v2"
+	"perchinka.github.io/spelling-gopher/internal/game"
 	"perchinka.github.io/spelling-gopher/internal/quote"
 )
 
@@ -16,6 +17,7 @@ type typingModel struct {
 	quotes       quoteSource
 	currentQuote quote.Quote
 	loading      bool
+	session      game.Session
 	err          error
 }
 
@@ -34,8 +36,21 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 	switch msg := msg.(type) {
 	case quoteMsg:
 		m.currentQuote, m.loading, m.err = msg.quote, false, nil
+		m.session = game.NewSession(msg.quote.Text)
 	case errMsg:
 		m.loading, m.err = false, msg.err
+	case tea.KeyPressMsg:
+		if m.loading {
+			return m, nil
+		}
+		switch {
+		case msg.Code == tea.KeyBackspace:
+			m.session.Backspace()
+		case msg.Text != "":
+			for _, r := range msg.Text {
+				m.session.Type(r)
+			}
+		}
 	}
 	return m, nil
 }
