@@ -13,10 +13,25 @@ import (
 // for color codes https://github.com/fidian/ansi
 // TODO don't forget to move this to the separate styles.go later
 var (
-	pendingStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-	correctStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("10"))
-	wrongStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("9"))
+	pendingStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
+	correctStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("10"))
+	wrongStyle      = lipgloss.NewStyle().Foreground(lipgloss.Color("9"))
+	wrongSpaceStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Underline(true)
 )
+
+func styleFor(glyph game.Glyph) lipgloss.Style {
+	switch glyph.State {
+	case game.Correct:
+		return correctStyle
+	case game.Wrong:
+		if glyph.IsSpace() {
+			return wrongSpaceStyle
+		}
+		return wrongStyle
+	default:
+		return pendingStyle
+	}
+}
 
 type quoteSource interface {
 	Random(ctx context.Context) (quote.Quote, error)
@@ -75,15 +90,7 @@ func (m typingModel) View() string {
 
 	var b strings.Builder
 	for _, glyph := range m.session.Glyphs() {
-		switch glyph.State {
-		case game.Correct:
-			b.WriteString(correctStyle.Render(string(glyph.Current)))
-		case game.Wrong:
-			b.WriteString(wrongStyle.Render(string(glyph.Current)))
-		default:
-			b.WriteString(pendingStyle.Render(string(glyph.Current)))
-		}
+		b.WriteString(styleFor(glyph).Render(string(glyph.Current)))
 	}
-
 	return b.String()
 }

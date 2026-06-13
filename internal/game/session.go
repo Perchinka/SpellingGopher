@@ -19,6 +19,10 @@ type Glyph struct {
 	State    CharState
 }
 
+func (g *Glyph) IsSpace() bool {
+	return g.Current == ' '
+}
+
 type Session struct {
 	target  []rune
 	typed   []rune
