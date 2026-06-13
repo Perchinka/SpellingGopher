@@ -2,10 +2,20 @@ package tui
 
 import (
 	"context"
+	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"perchinka.github.io/spelling-gopher/internal/game"
 	"perchinka.github.io/spelling-gopher/internal/quote"
+)
+
+// for color codes https://github.com/fidian/ansi
+// TODO don't forget to move this to the separate styles.go later
+var (
+	pendingStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
+	correctStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("10"))
+	wrongStyle   = lipgloss.NewStyle().Foreground(lipgloss.Color("9"))
 )
 
 type quoteSource interface {
@@ -62,5 +72,18 @@ func (m typingModel) View() string {
 	if m.err != nil {
 		return "error: " + m.err.Error()
 	}
-	return m.currentQuote.Text + "\n\t\t-" + m.currentQuote.Author
+
+	var b strings.Builder
+	for _, glyph := range m.session.Glyphs() {
+		switch glyph.State {
+		case game.Correct:
+			b.WriteString(correctStyle.Render(string(glyph.Current)))
+		case game.Wrong:
+			b.WriteString(wrongStyle.Render(string(glyph.Current)))
+		default:
+			b.WriteString(pendingStyle.Render(string(glyph.Current)))
+		}
+	}
+
+	return b.String()
 }

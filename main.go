@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	client := &http.Client{Timeout: 5 * time.Second}
+	client := &http.Client{Timeout: 15 * time.Second}
 	repo := zenquotes.New(client)
 	service := quote.NewService(repo)
 
