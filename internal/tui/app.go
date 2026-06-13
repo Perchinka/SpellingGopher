@@ -59,5 +59,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() tea.View {
-	return tea.NewView("test")
+	var content string
+	switch m.active {
+	case screenTyping:
+		content = m.typing.View()
+	case screenResults:
+		content = m.results.View()
+
+	}
+	return tea.NewView(content)
 }

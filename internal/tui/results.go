@@ -31,6 +31,6 @@ func (m resultsModel) Update(msg tea.Msg) (resultsModel, tea.Cmd) {
 	return m, nil
 }
 
-func (m resultsModel) View() tea.View {
-	return tea.NewView("test")
+func (m resultsModel) View() string {
+	return "Results screen"
 }

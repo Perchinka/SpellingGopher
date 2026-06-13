@@ -27,6 +27,6 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 	return m, nil
 }
 
-func (m typingModel) View() tea.View {
-	return tea.NewView("test")
+func (m typingModel) View() string {
+	return "Typing screen"
 }
