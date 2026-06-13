@@ -1,6 +1,6 @@
 package tui
 
-import "perchinka.github.io/spelling-gopher/internal/domain/quote"
+import "perchinka.github.io/spelling-gopher/internal/quote"
 
 type quoteMsg struct{ quote quote.Quote }
 type errMsg struct{ err error }

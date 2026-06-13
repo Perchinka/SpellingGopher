@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
-	quote "perchinka.github.io/spelling-gopher/internal/domain/quote"
+	quote "perchinka.github.io/spelling-gopher/internal/quote"
 )
 
 type Repository struct {

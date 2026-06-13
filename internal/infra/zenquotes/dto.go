@@ -1,7 +1,7 @@
 package zenquotes
 
 import (
-	"perchinka.github.io/spelling-gopher/internal/domain/quote"
+	"perchinka.github.io/spelling-gopher/internal/quote"
 )
 
 type zenQuoteDTO struct {
