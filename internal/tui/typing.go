@@ -1,32 +1,51 @@
 package tui
 
 import (
+	"context"
+
 	tea "charm.land/bubbletea/v2"
 	"perchinka.github.io/spelling-gopher/internal/quote"
 )
 
-type typingModel struct {
-	screenBase
-	quote quote.Quote
+type quoteSource interface {
+	Random(ctx context.Context) (quote.Quote, error)
 }
 
-func newTyping() typingModel {
+type typingModel struct {
+	screenBase
+	quotes       quoteSource
+	currentQuote quote.Quote
+	loading      bool
+	err          error
+}
+
+func newTyping(quotes quoteSource) typingModel {
 	return typingModel{
-		quote: quote.Quote{Text: "Nothing to see here", Author: "Perchinka"},
+		quotes:  quotes,
+		loading: true,
 	}
 }
 
 func (m typingModel) Init() tea.Cmd {
-	return nil
+	return fetchQuote(m.quotes)
 }
 
 func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
-	// switch msg := msg.(type) {
-	// case tea.KeyPressMsg:
-	// }
+	switch msg := msg.(type) {
+	case quoteMsg:
+		m.currentQuote, m.loading, m.err = msg.quote, false, nil
+	case errMsg:
+		m.loading, m.err = false, msg.err
+	}
 	return m, nil
 }
 
 func (m typingModel) View() string {
-	return "Typing screen"
+	if m.loading {
+		return "loading..."
+	}
+	if m.err != nil {
+		return "error: " + m.err.Error()
+	}
+	return m.currentQuote.Text + "\n\t\t-" + m.currentQuote.Author
 }
