@@ -40,6 +40,13 @@ func (s *Session) Type(r rune) {
 	s.typed = append(s.typed, r)
 }
 
+func (s *Session) Backspace() {
+	if len(s.typed) <= 0 {
+		return
+	}
+	s.typed = s.typed[:len(s.typed)-1]
+}
+
 func (s *Session) glyphAt(i int, expected rune) Glyph {
 	if i >= len(s.typed) {
 		return Glyph{expected: expected, current: expected, state: Pending}
