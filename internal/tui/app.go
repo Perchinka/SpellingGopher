@@ -8,7 +8,7 @@ type screenID int
 
 const (
 	screenTyping screenID = iota
-	screenResuts
+	screenResults
 )
 
 type Model struct {
@@ -20,7 +20,7 @@ type Model struct {
 
 func New() Model {
 	return Model{
-		active:  0,
+		active:  screenTyping,
 		typing:  newTyping(),
 		results: newResults(),
 		err:     nil,
