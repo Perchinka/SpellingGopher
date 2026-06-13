@@ -90,3 +90,52 @@ func TestSession_Glyphs_Boundaries(t *testing.T) {
 		t.Errorf("last glyph state = %v, want Correct", last.state)
 	}
 }
+
+func TestSession_Backspace(t *testing.T) {
+	t.Run("restores a wrong char to pending", func(t *testing.T) {
+		s := NewSession("cat")
+		typeString(&s, "cx")
+		s.Backspace()
+
+		want := []CharState{Correct, Pending, Pending}
+		if got := states(s.Glyphs()); !slices.Equal(got, want) {
+			t.Errorf("states = %v, want %v", got, want)
+		}
+	})
+
+	t.Run("on an empty session does nothing", func(t *testing.T) {
+		s := NewSession("cat")
+		s.Backspace()
+
+		want := []CharState{Pending, Pending, Pending}
+		if got := states(s.Glyphs()); !slices.Equal(got, want) {
+			t.Errorf("states = %v, want %v", got, want)
+		}
+	})
+
+	t.Run("retyping after backspace tracks the cursor", func(t *testing.T) {
+		s := NewSession("cat")
+		typeString(&s, "cx")
+		s.Backspace()
+		s.Type('a')
+
+		want := []CharState{Correct, Correct, Pending}
+		if got := states(s.Glyphs()); !slices.Equal(got, want) {
+			t.Errorf("states = %v, want %v", got, want)
+		}
+	})
+
+	t.Run("backspace exposes the typed rune underneath", func(t *testing.T) {
+		s := NewSession("cat")
+		typeString(&s, "cat")
+		s.Backspace()
+
+		g := s.Glyphs()
+		if g[2].state != Pending {
+			t.Errorf("position 2 state = %v, want Pending", g[2].state)
+		}
+		if g[2].current != 't' {
+			t.Errorf("position 2 current = %q, want 't'", g[2].current)
+		}
+	})
+}
