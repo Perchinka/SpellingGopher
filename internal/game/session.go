@@ -14,9 +14,9 @@ const (
 )
 
 type Glyph struct {
-	expected rune
-	current  rune
-	state    CharState
+	Expected rune
+	Current  rune
+	State    CharState
 }
 
 type Session struct {
@@ -49,13 +49,13 @@ func (s *Session) Backspace() {
 
 func (s *Session) glyphAt(i int, expected rune) Glyph {
 	if i >= len(s.typed) {
-		return Glyph{expected: expected, current: expected, state: Pending}
+		return Glyph{Expected: expected, Current: expected, State: Pending}
 	}
 	typed := s.typed[i]
 	if typed == expected {
-		return Glyph{expected: expected, current: typed, state: Correct}
+		return Glyph{Expected: expected, Current: typed, State: Correct}
 	}
-	return Glyph{expected: expected, current: typed, state: Wrong}
+	return Glyph{Expected: expected, Current: typed, State: Wrong}
 }
 
 func (s *Session) Glyphs() []Glyph {

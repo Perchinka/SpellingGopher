@@ -14,7 +14,7 @@ func typeString(s *Session, text string) {
 func states(glyphs []Glyph) []CharState {
 	out := make([]CharState, len(glyphs))
 	for i, g := range glyphs {
-		out[i] = g.state
+		out[i] = g.State
 	}
 	return out
 }
@@ -68,11 +68,11 @@ func TestSession_Glyphs_CurrentRune(t *testing.T) {
 	typeString(s, "cx")
 	g := s.Glyphs()
 
-	if g[1].current != 'x' {
-		t.Errorf("wrong glyph current = %q, want 'x'", g[1].current)
+	if g[1].Current != 'x' {
+		t.Errorf("wrong glyph current = %q, want 'x'", g[1].Current)
 	}
-	if g[2].current != 't' {
-		t.Errorf("pending glyph current = %q, want 't'", g[2].current)
+	if g[2].Current != 't' {
+		t.Errorf("pending glyph current = %q, want 't'", g[2].Current)
 	}
 }
 
@@ -86,8 +86,8 @@ func TestSession_Glyphs_Boundaries(t *testing.T) {
 	}
 
 	last := glyphs[len(glyphs)-1]
-	if last.state != Correct {
-		t.Errorf("last glyph state = %v, want Correct", last.state)
+	if last.State != Correct {
+		t.Errorf("last glyph state = %v, want Correct", last.State)
 	}
 }
 
@@ -115,8 +115,8 @@ func TestSession_Type_HandlesSpecialRunes(t *testing.T) {
 				t.Fatalf("glyph count = %d, want %d (rune count, not bytes)", len(glyphs), tt.want)
 			}
 			for i, g := range glyphs {
-				if g.state != Correct {
-					t.Errorf("glyph %d (%q) state = %v, want Correct", i, g.current, g.state)
+				if g.State != Correct {
+					t.Errorf("glyph %d (%q) state = %v, want Correct", i, g.Current, g.State)
 				}
 			}
 		})
@@ -180,11 +180,11 @@ func TestSession_Backspace(t *testing.T) {
 		s.Backspace()
 
 		g := s.Glyphs()
-		if g[2].state != Pending {
-			t.Errorf("position 2 state = %v, want Pending", g[2].state)
+		if g[2].State != Pending {
+			t.Errorf("position 2 state = %v, want Pending", g[2].State)
 		}
-		if g[2].current != 't' {
-			t.Errorf("position 2 current = %q, want 't'", g[2].current)
+		if g[2].Current != 't' {
+			t.Errorf("position 2 current = %q, want 't'", g[2].Current)
 		}
 	})
 }
