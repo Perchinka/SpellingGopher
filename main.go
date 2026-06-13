@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -18,5 +19,6 @@ func main() {
 	model := tui.New(service)
 
 	if _, err := tea.NewProgram(model).Run(); err != nil {
+		log.Fatal(err)
 	}
 }
