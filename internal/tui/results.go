@@ -19,7 +19,7 @@ func (m resultsModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m resultsModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m resultsModel) Update(msg tea.Msg) (resultsModel, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyPressMsg:
 		switch msg.String() {

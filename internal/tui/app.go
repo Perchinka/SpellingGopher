@@ -20,7 +20,10 @@ type Model struct {
 
 func New() Model {
 	return Model{
-		err: nil,
+		active:  0,
+		typing:  newTyping(),
+		results: newResults(),
+		err:     nil,
 	}
 }
 
