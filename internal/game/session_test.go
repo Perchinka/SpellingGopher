@@ -91,6 +91,55 @@ func TestSession_Glyphs_Boundaries(t *testing.T) {
 	}
 }
 
+func TestSession_Type_HandlesSpecialRunes(t *testing.T) {
+	targets := []struct {
+		name   string
+		target string
+		want   int // glyph count
+	}{
+		{name: "spaces between words", target: "be water my friend", want: 18},
+		{name: "punctuation", target: "Don't, stop!", want: 12},
+		{name: "symbols and digits", target: "1 + 1 = 2 & 3", want: 13},
+		{name: "accented latin", target: "café crème", want: 10},
+		{name: "em dash and quotes", target: `“go” — now`, want: 10},
+		{name: "tab inside text", target: "a\tb", want: 3},
+	}
+
+	for _, tt := range targets {
+		t.Run(tt.name, func(t *testing.T) {
+			s := NewSession(tt.target)
+			typeString(&s, tt.target)
+
+			glyphs := s.Glyphs()
+			if len(glyphs) != tt.want {
+				t.Fatalf("glyph count = %d, want %d (rune count, not bytes)", len(glyphs), tt.want)
+			}
+			for i, g := range glyphs {
+				if g.state != Correct {
+					t.Errorf("glyph %d (%q) state = %v, want Correct", i, g.current, g.state)
+				}
+			}
+		})
+	}
+}
+
+func TestSession_Type_SpaceIsSymbol(t *testing.T) {
+	s := NewSession("a b")
+	typeString(&s, "axb")
+
+	want := []CharState{Correct, Wrong, Correct}
+	if got := states(s.Glyphs()); !slices.Equal(got, want) {
+		t.Errorf("states = %v, want %v", got, want)
+	}
+
+	s2 := NewSession("abc")
+	typeString(&s2, "a c")
+	want2 := []CharState{Correct, Wrong, Correct}
+	if got := states(s2.Glyphs()); !slices.Equal(got, want2) {
+		t.Errorf("states = %v, want %v", got, want2)
+	}
+}
+
 func TestSession_Backspace(t *testing.T) {
 	t.Run("restores a wrong char to pending", func(t *testing.T) {
 		s := NewSession("cat")
