@@ -19,7 +19,7 @@ func New(quoteService *quote.Service) Model {
 	s := spinner.New(spinner.WithSpinner(spinner.Globe))
 	return Model{
 		quoteService: quoteService,
-		quote:        quote.Quote{Text: "Nothing here yet", Author: "Me", CharacterCount: 0},
+		quote:        quote.Quote{Text: "Nothing here yet", Author: "Me"},
 		loading:      true,
 		err:          nil,
 		spinner:      s,

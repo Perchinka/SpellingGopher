@@ -24,8 +24,8 @@ func TestToDomain(t *testing.T) {
 			if got.Author != tt.dto.Author {
 				t.Errorf("Author = %q, want %q", got.Author, tt.dto.Author)
 			}
-			if got.CharacterCount != tt.want {
-				t.Errorf("CharacterCount = %d, want %d", got.CharacterCount, tt.want)
+			if got.RuneCount() != tt.want {
+				t.Errorf("CharacterCount = %d, want %d", got.RuneCount(), tt.want)
 			}
 		})
 	}

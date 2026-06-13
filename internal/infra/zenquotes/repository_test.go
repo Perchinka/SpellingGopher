@@ -23,7 +23,7 @@ func TestRepository_Random(t *testing.T) {
 			name:   "valid single quote",
 			status: 200,
 			body:   `[{"q":"be water","a":"Bruce Lee","c":"8"}]`,
-			want:   quote.Quote{Text: "be water", Author: "Bruce Lee", CharacterCount: 8},
+			want:   quote.Quote{Text: "be water", Author: "Bruce Lee"},
 		},
 		{name: "empty array", status: 200, body: `[]`, wantErr: ErrEmptyResponse},
 		{name: "empty body", status: 200, body: ``, wantErr: ErrInvalidResponse},
