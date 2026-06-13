@@ -55,7 +55,7 @@ func TestSession_Glyphs_States(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSession(tt.target)
-			typeString(&s, tt.typed)
+			typeString(s, tt.typed)
 			if got := states(s.Glyphs()); !slices.Equal(got, tt.want) {
 				t.Errorf("states = %v, want %v", got, tt.want)
 			}
@@ -65,7 +65,7 @@ func TestSession_Glyphs_States(t *testing.T) {
 
 func TestSession_Glyphs_CurrentRune(t *testing.T) {
 	s := NewSession("cat")
-	typeString(&s, "cx")
+	typeString(s, "cx")
 	g := s.Glyphs()
 
 	if g[1].current != 'x' {
@@ -78,7 +78,7 @@ func TestSession_Glyphs_CurrentRune(t *testing.T) {
 
 func TestSession_Glyphs_Boundaries(t *testing.T) {
 	s := NewSession("ab")
-	typeString(&s, "abc")
+	typeString(s, "abc")
 
 	glyphs := s.Glyphs()
 	if len(glyphs) != 2 {
@@ -108,7 +108,7 @@ func TestSession_Type_HandlesSpecialRunes(t *testing.T) {
 	for _, tt := range targets {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSession(tt.target)
-			typeString(&s, tt.target)
+			typeString(s, tt.target)
 
 			glyphs := s.Glyphs()
 			if len(glyphs) != tt.want {
@@ -125,7 +125,7 @@ func TestSession_Type_HandlesSpecialRunes(t *testing.T) {
 
 func TestSession_Type_SpaceIsSymbol(t *testing.T) {
 	s := NewSession("a b")
-	typeString(&s, "axb")
+	typeString(s, "axb")
 
 	want := []CharState{Correct, Wrong, Correct}
 	if got := states(s.Glyphs()); !slices.Equal(got, want) {
@@ -133,7 +133,7 @@ func TestSession_Type_SpaceIsSymbol(t *testing.T) {
 	}
 
 	s2 := NewSession("abc")
-	typeString(&s2, "a c")
+	typeString(s2, "a c")
 	want2 := []CharState{Correct, Wrong, Correct}
 	if got := states(s2.Glyphs()); !slices.Equal(got, want2) {
 		t.Errorf("states = %v, want %v", got, want2)
@@ -143,7 +143,7 @@ func TestSession_Type_SpaceIsSymbol(t *testing.T) {
 func TestSession_Backspace(t *testing.T) {
 	t.Run("restores a wrong char to pending", func(t *testing.T) {
 		s := NewSession("cat")
-		typeString(&s, "cx")
+		typeString(s, "cx")
 		s.Backspace()
 
 		want := []CharState{Correct, Pending, Pending}
@@ -164,7 +164,7 @@ func TestSession_Backspace(t *testing.T) {
 
 	t.Run("retyping after backspace tracks the cursor", func(t *testing.T) {
 		s := NewSession("cat")
-		typeString(&s, "cx")
+		typeString(s, "cx")
 		s.Backspace()
 		s.Type('a')
 
@@ -176,7 +176,7 @@ func TestSession_Backspace(t *testing.T) {
 
 	t.Run("backspace exposes the typed rune underneath", func(t *testing.T) {
 		s := NewSession("cat")
-		typeString(&s, "cat")
+		typeString(s, "cat")
 		s.Backspace()
 
 		g := s.Glyphs()

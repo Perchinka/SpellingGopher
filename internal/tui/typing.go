@@ -17,7 +17,7 @@ type typingModel struct {
 	quotes       quoteSource
 	currentQuote quote.Quote
 	loading      bool
-	session      game.Session
+	session      *game.Session
 	err          error
 }
 
@@ -40,7 +40,7 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 	case errMsg:
 		m.loading, m.err = false, msg.err
 	case tea.KeyPressMsg:
-		if m.loading {
+		if m.session == nil {
 			return m, nil
 		}
 		switch {

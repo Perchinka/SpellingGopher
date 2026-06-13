@@ -26,8 +26,8 @@ type Session struct {
 	ended   time.Time
 }
 
-func NewSession(target string) Session {
-	return Session{
+func NewSession(target string) *Session {
+	return &Session{
 		target:  []rune(target),
 		started: time.Now(),
 	}
