@@ -6,6 +6,7 @@ import (
 )
 
 type typingModel struct {
+	screenBase
 	quote quote.Quote
 }
 
@@ -20,13 +21,9 @@ func (m typingModel) Init() tea.Cmd {
 }
 
 func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyPressMsg:
-		switch msg.String() {
-		case "q", "ctrl+c":
-			return m, tea.Quit
-		}
-	}
+	// switch msg := msg.(type) {
+	// case tea.KeyPressMsg:
+	// }
 	return m, nil
 }
 

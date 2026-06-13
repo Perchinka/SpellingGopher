@@ -6,6 +6,7 @@ import (
 )
 
 type resultsModel struct {
+	screenBase
 	quote quote.Quote
 }
 
