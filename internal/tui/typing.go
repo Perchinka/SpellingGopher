@@ -2,7 +2,9 @@ package tui
 
 import (
 	"context"
+	"fmt"
 	"strings"
+	"time"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -82,6 +84,10 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 		if !wasFinished && m.session.Finished() {
 			return m, finished(m.session)
 		}
+		switch msg.String() {
+		case "enter":
+			return m, restartGame()
+		}
 	case tickMsg:
 		if m.session == nil || m.session.Finished() {
 			return m, nil
@@ -99,9 +105,30 @@ func (m typingModel) View() string {
 		return "error: " + m.err.Error()
 	}
 
+	stats := m.session.Stats()
+	headerText := fmt.Sprintf("%3.0f wpm    %3.0f%%    %s",
+		stats.WPM, stats.Accuracy*100, stats.Elapsed.Round(time.Second))
+
 	var b strings.Builder
-	for _, glyph := range m.session.Glyphs() {
-		b.WriteString(styleFor(glyph).Render(string(glyph.Current)))
+	for _, g := range m.session.Glyphs() {
+		b.WriteString(styleFor(g).Render(string(g.Current)))
 	}
-	return b.String()
+
+	header := lipgloss.NewStyle().
+		Align(lipgloss.Center).Width(m.width).
+		Border(lipgloss.NormalBorder(), false, false, true, false).
+		Render(headerText)
+
+	footer := lipgloss.NewStyle().
+		Align(lipgloss.Center).Width(m.width).
+		Render("esc quit * enter restart")
+
+	content := lipgloss.NewStyle().
+		Width(m.width).
+		Height(m.height-lipgloss.Height(header)-
+			lipgloss.Height(footer)).
+		Align(lipgloss.Center, lipgloss.Center).
+		Render(b.String())
+
+	return lipgloss.JoinVertical(lipgloss.Left, header, content, footer)
 }
