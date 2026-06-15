@@ -23,9 +23,13 @@ func (m resultsModel) Init() tea.Cmd {
 }
 
 func (m resultsModel) Update(msg tea.Msg) (resultsModel, tea.Cmd) {
-	// switch msg := msg.(type) {
-	// case tea.KeyPressMsg:
-	// }
+	switch msg := msg.(type) {
+	case tea.KeyPressMsg:
+		switch msg.String() {
+		case "enter":
+			return m, restartGame()
+		}
+	}
 	return m, nil
 }
 

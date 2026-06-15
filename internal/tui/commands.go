@@ -20,3 +20,7 @@ func fetchQuote(quotes quoteSource) tea.Cmd {
 func finished(s *game.Session) tea.Cmd {
 	return func() tea.Msg { return sessionFinishedMsg{session: s} }
 }
+
+func restartGame() tea.Cmd {
+	return func() tea.Msg { return restartGameMsg{} }
+}

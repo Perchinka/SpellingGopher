@@ -53,9 +53,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case sessionFinishedMsg:
 		m.active = screenResults
 		m.results.session = msg.session
-
 		return m, nil
 
+	case restartGameMsg:
+		m.active = screenTyping
+		m.typing.loading = true
+		m.typing.session = nil
+		return m, m.typing.Init()
 	}
 
 	var cmd tea.Cmd
