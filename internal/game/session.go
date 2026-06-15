@@ -5,6 +5,8 @@ import "time"
 // NOTE not sure if this CharState has to be here
 // I guess for now it's fine, but probably will move later
 
+type Clock interface{ Now() time.Time }
+
 type CharState int
 
 const (
@@ -28,6 +30,7 @@ type Session struct {
 	typed   []rune
 	started time.Time
 	ended   time.Time
+	clock   Clock
 }
 
 func NewSession(target string) *Session {
@@ -72,4 +75,14 @@ func (s *Session) Glyphs() []Glyph {
 
 func (s *Session) Finished() bool {
 	return len(s.typed) == len(s.target)
+}
+
+func (s *Session) Elapsed() time.Duration {
+	if s.started.IsZero() {
+		return 0
+	}
+	if !s.ended.IsZero() {
+		return s.ended.Sub(s.started)
+	}
+	return s.clock.Now().Sub(s.started)
 }
