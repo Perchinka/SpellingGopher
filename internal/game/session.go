@@ -2,29 +2,6 @@ package game
 
 import "time"
 
-// NOTE not sure if this CharState has to be here
-// I guess for now it's fine, but probably will move later
-
-type Clock interface{ Now() time.Time }
-
-type CharState int
-
-const (
-	Pending CharState = iota
-	Correct
-	Wrong
-)
-
-type Glyph struct {
-	Expected rune
-	Current  rune
-	State    CharState
-}
-
-func (g *Glyph) IsSpace() bool {
-	return g.Current == ' '
-}
-
 type Session struct {
 	target  []rune
 	typed   []rune
@@ -75,28 +52,4 @@ func (s *Session) Glyphs() []Glyph {
 
 func (s *Session) Finished() bool {
 	return len(s.typed) == len(s.target)
-}
-
-func (s *Session) Elapsed() time.Duration {
-	if s.started.IsZero() {
-		return 0
-	}
-	if !s.ended.IsZero() {
-		return s.ended.Sub(s.started)
-	}
-	return s.clock.Now().Sub(s.started)
-}
-
-type Stats struct {
-	Elapsed  time.Duration
-	WPM      float64
-	Accuracy float64
-}
-
-func (s *Session) Stats() Stats {
-	return Stats{
-		Elapsed:  s.Elapsed(),
-		WPM:      WPM(len(s.target), s.Elapsed()), // NOTE Elapsed could be 0
-		Accuracy: 1,                               //TODO calculate actual accuracy
-	}
 }

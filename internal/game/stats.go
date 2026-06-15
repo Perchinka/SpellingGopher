@@ -1,0 +1,37 @@
+package game
+
+import "time"
+
+type Clock interface{ Now() time.Time }
+
+type Stats struct {
+	Elapsed  time.Duration
+	WPM      float64
+	Accuracy float64
+}
+
+func (s *Session) Elapsed() time.Duration {
+	if s.started.IsZero() {
+		return 0
+	}
+	if !s.ended.IsZero() {
+		return s.ended.Sub(s.started)
+	}
+	return s.clock.Now().Sub(s.started)
+}
+
+func (s *Session) Stats() Stats {
+	return Stats{
+		Elapsed:  s.Elapsed(),
+		WPM:      WPM(len(s.target), s.Elapsed()), // NOTE Elapsed could be 0
+		Accuracy: 1,                               //TODO calculate actual accuracy
+	}
+}
+
+func WPM(characters int, duration time.Duration) float64 {
+	if duration <= 0 {
+		return 0.0
+	}
+
+	return (float64(characters) / 5.0) / duration.Minutes()
+}
