@@ -140,6 +140,58 @@ func TestSession_Type_SpaceIsSymbol(t *testing.T) {
 	}
 }
 
+func TestSession_Finished(t *testing.T) {
+	tests := []struct {
+		name   string
+		target string
+		typed  string
+		want   bool
+	}{
+		{
+			name:   "fresh session is not finished",
+			target: "cat",
+			typed:  "",
+			want:   false,
+		},
+		{
+			name:   "partially typed is not finished",
+			target: "cat",
+			typed:  "ca",
+			want:   false,
+		},
+		{
+			name:   "fully typed and correct is finished",
+			target: "cat",
+			typed:  "cat",
+			want:   true,
+		},
+		{
+			name:   "fully typed with errors is still finished",
+			target: "cat",
+			typed:  "cax",
+			want:   true,
+		},
+		{
+			// Type guards against overtyping, so length can't exceed target;
+			// extra keystrokes are dropped and the session stays finished.
+			name:   "overtyping does not unfinish",
+			target: "cat",
+			typed:  "catxyz",
+			want:   true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := NewSession(tt.target)
+			typeString(s, tt.typed)
+			if got := s.Finished(); got != tt.want {
+				t.Errorf("Finished() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestSession_Backspace(t *testing.T) {
 	t.Run("restores a wrong char to pending", func(t *testing.T) {
 		s := NewSession("cat")

@@ -69,3 +69,7 @@ func (s *Session) Glyphs() []Glyph {
 	}
 	return glyphs
 }
+
+func (s *Session) Finished() bool {
+	return len(s.typed) == len(s.target)
+}
