@@ -2,12 +2,14 @@ package tui
 
 import (
 	tea "charm.land/bubbletea/v2"
+	"perchinka.github.io/spelling-gopher/internal/game"
 	"perchinka.github.io/spelling-gopher/internal/quote"
 )
 
 type resultsModel struct {
 	screenBase
-	quote quote.Quote
+	session *game.Session
+	quote   quote.Quote
 }
 
 func newResults() resultsModel {

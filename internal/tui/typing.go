@@ -68,6 +68,7 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 		if m.session == nil {
 			return m, nil
 		}
+		wasFinished := m.session.Finished()
 		switch {
 		case msg.Code == tea.KeyBackspace:
 			m.session.Backspace()
@@ -75,6 +76,9 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 			for _, r := range msg.Text {
 				m.session.Type(r)
 			}
+		}
+		if !wasFinished && m.session.Finished() {
+			return m, finished(m.session)
 		}
 	}
 	return m, nil

@@ -50,6 +50,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.typing.SetSize(m.width, m.height)
 		m.results.SetSize(m.width, m.height)
 		return m, nil
+	case sessionFinishedMsg:
+		m.active = screenResults
+		m.results.session = msg.session
+
+		return m, nil
+
 	}
 
 	var cmd tea.Cmd
@@ -59,6 +65,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case screenResults:
 		m.results, cmd = m.results.Update(msg)
 	}
+
 	return m, cmd
 }
 

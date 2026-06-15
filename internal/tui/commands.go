@@ -4,9 +4,9 @@ import (
 	"context"
 
 	tea "charm.land/bubbletea/v2"
+	"perchinka.github.io/spelling-gopher/internal/game"
 )
 
-// NOTE Pull it out like that to not block Update thread
 func fetchQuote(quotes quoteSource) tea.Cmd {
 	return func() tea.Msg {
 		q, err := quotes.Random(context.Background())
@@ -15,4 +15,8 @@ func fetchQuote(quotes quoteSource) tea.Cmd {
 		}
 		return quoteMsg{q}
 	}
+}
+
+func finished(s *game.Session) tea.Cmd {
+	return func() tea.Msg { return sessionFinishedMsg{session: s} }
 }
