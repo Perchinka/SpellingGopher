@@ -86,3 +86,17 @@ func (s *Session) Elapsed() time.Duration {
 	}
 	return s.clock.Now().Sub(s.started)
 }
+
+type Stats struct {
+	Elapsed  time.Duration
+	WPM      float64
+	Accuracy float64
+}
+
+func (s *Session) Stats() Stats {
+	return Stats{
+		Elapsed:  s.Elapsed(),
+		WPM:      WPM(len(s.target), s.Elapsed()), // NOTE Elapsed could be 0
+		Accuracy: 1,                               //TODO calculate actual accuracy
+	}
+}
