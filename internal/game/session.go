@@ -32,6 +32,10 @@ func (s *Session) Type(r rune) {
 		s.errors++
 	}
 	s.typed = append(s.typed, r)
+
+	if s.Finished() {
+		s.ended = s.clock.Now()
+	}
 }
 
 func (s *Session) Backspace() {

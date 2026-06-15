@@ -1,7 +1,11 @@
 package tui
 
 import (
+	"fmt"
+	"time"
+
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"perchinka.github.io/spelling-gopher/internal/game"
 	"perchinka.github.io/spelling-gopher/internal/quote"
 )
@@ -34,5 +38,22 @@ func (m resultsModel) Update(msg tea.Msg) (resultsModel, tea.Cmd) {
 }
 
 func (m resultsModel) View() string {
-	return "Results screen"
+	if m.session == nil {
+		return "no results yet"
+	}
+	st := m.session.Stats()
+
+	body := fmt.Sprintf("%.0f wpm\n%.0f%% accuracy\n%s",
+		st.WPM, st.Accuracy*100, st.Elapsed.Round(time.Second))
+
+	content := lipgloss.NewStyle().
+		Width(m.width).Height(m.height-1).
+		Align(lipgloss.Center, lipgloss.Center).
+		Render(body)
+
+	footer := lipgloss.NewStyle().
+		Align(lipgloss.Center).Width(m.width).
+		Render("enter play again * esc quit")
+
+	return lipgloss.JoinVertical(lipgloss.Left, content, footer)
 }
