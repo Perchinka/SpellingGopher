@@ -65,7 +65,7 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 	switch msg := msg.(type) {
 	case quoteMsg:
 		m.currentQuote, m.loading, m.err = msg.quote, false, nil
-		m.session = game.NewSession(msg.quote.Text, m.clock)
+		m.session = game.NewSession(msg.quote.Text, m.clock, msg.quote.Author)
 	case errMsg:
 		m.loading, m.err = false, msg.err
 	case tea.KeyPressMsg:
@@ -113,6 +113,8 @@ func (m typingModel) View() string {
 	for _, g := range m.session.Glyphs() {
 		b.WriteString(styleFor(g).Render(string(g.Current)))
 	}
+
+	b.WriteString("\n\n" + m.session.Author)
 
 	header := lipgloss.NewStyle().
 		Align(lipgloss.Center).Width(m.width).

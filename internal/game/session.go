@@ -4,6 +4,7 @@ import "time"
 
 type Session struct {
 	target     []rune
+	Author     string
 	typed      []rune
 	keystrokes int
 	errors     int
@@ -12,11 +13,12 @@ type Session struct {
 	clock      Clock
 }
 
-func NewSession(target string, clock Clock) *Session {
+func NewSession(target string, clock Clock, author string) *Session {
 	return &Session{
 		target:     []rune(target),
 		keystrokes: 0,
 		clock:      clock,
+		Author:     author,
 	}
 }
 
