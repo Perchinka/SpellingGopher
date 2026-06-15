@@ -3,23 +3,30 @@ package game
 import "time"
 
 type Session struct {
-	target  []rune
-	typed   []rune
-	started time.Time
-	ended   time.Time
-	clock   Clock
+	target     []rune
+	typed      []rune
+	keystrokes int
+	errors     int
+	started    time.Time
+	ended      time.Time
+	clock      Clock
 }
 
 func NewSession(target string) *Session {
 	return &Session{
-		target:  []rune(target),
-		started: time.Now(),
+		target:     []rune(target),
+		started:    time.Now(),
+		keystrokes: 0,
 	}
 }
 
 func (s *Session) Type(r rune) {
 	if len(s.typed) >= len(s.target) {
 		return
+	}
+	s.keystrokes++
+	if r != s.target[len(s.typed)] {
+		s.errors++
 	}
 	s.typed = append(s.typed, r)
 }

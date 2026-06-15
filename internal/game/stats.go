@@ -20,11 +20,15 @@ func (s *Session) Elapsed() time.Duration {
 	return s.clock.Now().Sub(s.started)
 }
 
+func (s *Session) Accuracy() float64 {
+	return float64(s.keystrokes-s.errors) / float64(s.keystrokes)
+}
+
 func (s *Session) Stats() Stats {
 	return Stats{
 		Elapsed:  s.Elapsed(),
 		WPM:      WPM(len(s.target), s.Elapsed()), // NOTE Elapsed could be 0
-		Accuracy: 1,                               //TODO calculate actual accuracy
+		Accuracy: s.Accuracy(),                    //TODO calculate actual accuracy
 	}
 }
 
