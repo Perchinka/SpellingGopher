@@ -155,7 +155,7 @@ func TestSession_Stats_NetWPM(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			clock := &fakeClock{}
-			s := NewSession(tt.target, clock)
+			s := NewSession(tt.target, clock, "FakeAuthor")
 			typeString(s, tt.typed)
 			clock.Advance(tt.advance)
 
