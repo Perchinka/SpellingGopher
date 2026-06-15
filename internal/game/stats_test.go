@@ -80,24 +80,24 @@ func TestSession_Accuracy(t *testing.T) {
 	}
 
 	t.Run("fresh session is 100% (guards 0/0)", func(t *testing.T) {
-		s := NewSession("cat")
+		s := newTestSession("cat")
 		assertAccuracy(t, s, 1.0)
 	})
 
 	t.Run("all correct is 100%", func(t *testing.T) {
-		s := NewSession("cat")
+		s := newTestSession("cat")
 		typeString(s, "cat")
 		assertAccuracy(t, s, 1.0)
 	})
 
 	t.Run("one wrong of three is two thirds", func(t *testing.T) {
-		s := NewSession("cat")
+		s := newTestSession("cat")
 		typeString(s, "cax")
 		assertAccuracy(t, s, 2.0/3.0)
 	})
 
 	t.Run("all wrong is 0%", func(t *testing.T) {
-		s := NewSession("cat")
+		s := newTestSession("cat")
 		typeString(s, "xyz")
 		assertAccuracy(t, s, 0.0)
 	})
@@ -106,7 +106,7 @@ func TestSession_Accuracy(t *testing.T) {
 		// The cumulative model: type a wrong char, backspace it, type the right
 		// one. The final text "ca" is clean, but the mistake still happened.
 		// 3 keystrokes, 1 error -> 2/3. Backspace edits the text, not history.
-		s := NewSession("cat")
+		s := newTestSession("cat")
 		typeString(s, "cx")
 		s.Backspace()
 		s.Type('a')
@@ -114,12 +114,12 @@ func TestSession_Accuracy(t *testing.T) {
 	})
 
 	t.Run("overtyping is dropped and does not count", func(t *testing.T) {
-		s := NewSession("cat")
+		s := newTestSession("cat")
 		typeString(s, "catxy")
 		assertAccuracy(t, s, 1.0)
 	})
 	t.Run("retyping a correct char keeps 100%", func(t *testing.T) {
-		s := NewSession("cat")
+		s := newTestSession("cat")
 		s.Type('c')
 		s.Backspace()
 		s.Type('c')
