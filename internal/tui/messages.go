@@ -3,8 +3,8 @@ package tui
 import (
 	"time"
 
-	"perchinka.github.io/spelling-gopher/internal/game"
-	"perchinka.github.io/spelling-gopher/internal/quote"
+	"github.com/Perchinka/SpellingGopher/internal/game"
+	"github.com/Perchinka/SpellingGopher/internal/quote"
 )
 
 type quoteMsg struct{ quote quote.Quote }

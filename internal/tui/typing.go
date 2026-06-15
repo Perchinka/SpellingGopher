@@ -8,8 +8,8 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"perchinka.github.io/spelling-gopher/internal/game"
-	"perchinka.github.io/spelling-gopher/internal/quote"
+	"github.com/Perchinka/SpellingGopher/internal/game"
+	"github.com/Perchinka/SpellingGopher/internal/quote"
 )
 
 // for color codes https://github.com/fidian/ansi

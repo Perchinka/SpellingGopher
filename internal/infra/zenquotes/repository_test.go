@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"perchinka.github.io/spelling-gopher/internal/quote"
+	"github.com/Perchinka/SpellingGopher/internal/quote"
 )
 
 func TestRepository_Random(t *testing.T) {

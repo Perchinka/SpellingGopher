@@ -2,7 +2,7 @@ package tui
 
 import (
 	tea "charm.land/bubbletea/v2"
-	"perchinka.github.io/spelling-gopher/internal/game"
+	"github.com/Perchinka/SpellingGopher/internal/game"
 )
 
 type screenBase struct {

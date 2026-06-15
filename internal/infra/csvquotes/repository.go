@@ -7,7 +7,7 @@ import (
 	"math/rand/v2"
 	"strings"
 
-	"perchinka.github.io/spelling-gopher/internal/quote"
+	"github.com/Perchinka/SpellingGopher/internal/quote"
 )
 
 var _ quote.Repository = (*Repository)(nil)

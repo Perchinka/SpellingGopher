@@ -1,4 +1,4 @@
-module perchinka.github.io/spelling-gopher
+module github.com/Perchinka/SpellingGopher
 
 go 1.26.3
 

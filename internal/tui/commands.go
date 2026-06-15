@@ -5,7 +5,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"perchinka.github.io/spelling-gopher/internal/game"
+	"github.com/Perchinka/SpellingGopher/internal/game"
 )
 
 func tick() tea.Cmd {
