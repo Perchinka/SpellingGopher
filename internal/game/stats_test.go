@@ -127,6 +127,45 @@ func TestSession_Accuracy(t *testing.T) {
 	})
 }
 
+func TestSession_Stats_NetWPM(t *testing.T) {
+	const tol = 1e-9
+	tests := []struct {
+		name    string
+		target  string
+		typed   string
+		advance time.Duration
+		wantWPM float64
+	}{
+		{
+			name:    "partial progress counts typed chars, not target length",
+			target:  "abcdefghij",
+			typed:   "abcde",
+			advance: time.Minute,
+			wantWPM: 1,
+		},
+		{
+			name:    "errors lower net wpm",
+			target:  "abcdefghij",
+			typed:   "axcde",
+			advance: time.Minute,
+			wantWPM: 0.8,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			clock := &fakeClock{}
+			s := NewSession(tt.target, clock)
+			typeString(s, tt.typed)
+			clock.Advance(tt.advance)
+
+			if got := s.Stats().WPM; math.Abs(got-tt.wantWPM) > tol {
+				t.Errorf("WPM = %v, want %v (net = correct chars / 5 / minutes)", got, tt.wantWPM)
+			}
+		})
+	}
+}
+
 func TestSession_Stats_FreshSession(t *testing.T) {
 	s := newTestSession("cat")
 

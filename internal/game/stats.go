@@ -34,8 +34,8 @@ func (s *Session) Accuracy() float64 {
 func (s *Session) Stats() Stats {
 	return Stats{
 		Elapsed:  s.Elapsed(),
-		WPM:      WPM(len(s.target), s.Elapsed()), // NOTE Elapsed could be 0
-		Accuracy: s.Accuracy(),                    //TODO calculate actual accuracy
+		WPM:      WPM(s.keystrokes-s.errors, s.Elapsed()), // NOTE Elapsed could be 0
+		Accuracy: s.Accuracy(),                            //TODO calculate actual accuracy
 	}
 }
 
