@@ -4,6 +4,7 @@ import (
 	"log"
 
 	tea "charm.land/bubbletea/v2"
+	"perchinka.github.io/spelling-gopher/internal/game"
 	"perchinka.github.io/spelling-gopher/internal/infra/csvquotes"
 	"perchinka.github.io/spelling-gopher/internal/quote"
 	"perchinka.github.io/spelling-gopher/internal/tui"
@@ -18,8 +19,9 @@ func main() {
 		return
 	}
 	service := quote.NewService(repo)
+	clock := game.RealClock{}
 
-	model := tui.New(service)
+	model := tui.New(service, clock)
 
 	if _, err := tea.NewProgram(model).Run(); err != nil {
 		log.Fatal(err)

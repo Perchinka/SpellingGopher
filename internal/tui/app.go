@@ -2,6 +2,7 @@ package tui
 
 import (
 	tea "charm.land/bubbletea/v2"
+	"perchinka.github.io/spelling-gopher/internal/game"
 )
 
 type screenBase struct {
@@ -24,10 +25,10 @@ type Model struct {
 	width, height int
 }
 
-func New(quotes quoteSource) Model {
+func New(quotes quoteSource, clock game.RealClock) Model {
 	return Model{
 		active:  screenTyping,
-		typing:  newTyping(quotes),
+		typing:  newTyping(quotes, clock),
 		results: newResults(),
 	}
 }

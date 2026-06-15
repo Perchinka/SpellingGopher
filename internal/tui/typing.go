@@ -43,25 +43,27 @@ type typingModel struct {
 	currentQuote quote.Quote
 	loading      bool
 	session      *game.Session
+	clock        game.Clock
 	err          error
 }
 
-func newTyping(quotes quoteSource) typingModel {
+func newTyping(quotes quoteSource, clock game.RealClock) typingModel {
 	return typingModel{
 		quotes:  quotes,
 		loading: true,
+		clock:   clock,
 	}
 }
 
 func (m typingModel) Init() tea.Cmd {
-	return fetchQuote(m.quotes)
+	return tea.Batch(fetchQuote(m.quotes), tick())
 }
 
 func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 	switch msg := msg.(type) {
 	case quoteMsg:
 		m.currentQuote, m.loading, m.err = msg.quote, false, nil
-		m.session = game.NewSession(msg.quote.Text)
+		m.session = game.NewSession(msg.quote.Text, m.clock)
 	case errMsg:
 		m.loading, m.err = false, msg.err
 	case tea.KeyPressMsg:
@@ -80,6 +82,11 @@ func (m typingModel) Update(msg tea.Msg) (typingModel, tea.Cmd) {
 		if !wasFinished && m.session.Finished() {
 			return m, finished(m.session)
 		}
+	case tickMsg:
+		if m.session == nil || m.session.Finished() {
+			return m, nil
+		}
+		return m, tick()
 	}
 	return m, nil
 }

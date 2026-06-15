@@ -12,15 +12,18 @@ type Session struct {
 	clock      Clock
 }
 
-func NewSession(target string) *Session {
+func NewSession(target string, clock Clock) *Session {
 	return &Session{
 		target:     []rune(target),
-		started:    time.Now(),
 		keystrokes: 0,
+		clock:      clock,
 	}
 }
 
 func (s *Session) Type(r rune) {
+	if s.started.IsZero() {
+		s.started = s.clock.Now()
+	}
 	if len(s.typed) >= len(s.target) {
 		return
 	}
