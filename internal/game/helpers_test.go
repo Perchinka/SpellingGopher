@@ -10,5 +10,5 @@ func (c *fakeClock) Now() time.Time          { return fakeEpoch.Add(c.elapsed) }
 func (c *fakeClock) Advance(d time.Duration) { c.elapsed += d }
 
 func newTestSession(target string) *Session {
-	return NewSession(target, &fakeClock{})
+	return NewSession(target, &fakeClock{}, "FakeAuthor")
 }
