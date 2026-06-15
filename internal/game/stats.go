@@ -25,6 +25,9 @@ func (s *Session) Elapsed() time.Duration {
 }
 
 func (s *Session) Accuracy() float64 {
+	if s.keystrokes == 0 {
+		return 1.0
+	}
 	return float64(s.keystrokes-s.errors) / float64(s.keystrokes)
 }
 

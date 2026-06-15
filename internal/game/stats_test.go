@@ -126,3 +126,19 @@ func TestSession_Accuracy(t *testing.T) {
 		assertAccuracy(t, s, 1.0)
 	})
 }
+
+func TestSession_Stats_FreshSession(t *testing.T) {
+	s := newTestSession("cat")
+
+	got := s.Stats()
+
+	if got.Elapsed != 0 {
+		t.Errorf("Elapsed = %v, want 0", got.Elapsed)
+	}
+	if got.WPM != 0 {
+		t.Errorf("WPM = %v, want 0", got.WPM)
+	}
+	if got.Accuracy != 1.0 {
+		t.Errorf("Accuracy = %v, want 1.0", got.Accuracy)
+	}
+}
