@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/Perchinka/SpellingGopher/internal/game"
@@ -10,13 +12,17 @@ import (
 	"github.com/Perchinka/SpellingGopher/internal/tui"
 )
 
+var version = "dev"
+
 func main() {
-	// client := &http.Client{Timeout: 15 * time.Second}
-	// repo := zenquotes.New(client)
+	if len(os.Args) > 1 && os.Args[1] == "--version" {
+		fmt.Println(version)
+		return
+	}
+
 	repo, err := csvquotes.New()
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 	service := quote.NewService(repo)
 	clock := game.RealClock{}

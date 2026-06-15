@@ -1,0 +1,72 @@
+version: 2
+
+project_name: spelling-gopher
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: spelling-gopher
+    main: ./cmd/spelling-gopher
+    binary: spelling-gopher
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: default
+    formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+
+# ---- Homebrew (cask) ---------------------------------------------------------
+homebrew_casks:
+  - name: spelling-gopher
+    repository:
+      owner: Perchinka
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/Perchinka/SpellingGopher"
+    description: "A Monkeytype-style terminal typing game"
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/spelling-gopher"]
+          end
+
+# ---- Linux packages (.deb / .rpm / .apk / Arch) ------------------------------
+nfpms:
+  - id: packages
+    package_name: spelling-gopher
+    vendor: Perchinka
+    homepage: "https://github.com/Perchinka/SpellingGopher"
+    maintainer: "Perchinka <aleksei.v.lukin@gmail.com>"
+    description: "A Monkeytype-style terminal typing game"
+    license: "GPL-3.0-only"
+    formats:
+      - deb
+      - rpm
+      - apk
+      - archlinux
+    contents:
+      - src: ./LICENSE
+        dst: /usr/share/licenses/spelling-gopher/LICENSE
