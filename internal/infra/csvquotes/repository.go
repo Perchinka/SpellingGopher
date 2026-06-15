@@ -4,7 +4,9 @@ import (
 	"context"
 	_ "embed"
 	"encoding/csv"
+	"io"
 	"math/rand/v2"
+	"os"
 	"strings"
 
 	"github.com/Perchinka/SpellingGopher/internal/quote"
@@ -20,7 +22,20 @@ type Repository struct {
 }
 
 func New() (*Repository, error) {
-	records, err := csv.NewReader(strings.NewReader(quotesData)).ReadAll()
+	return NewFromReader(strings.NewReader(quotesData))
+}
+
+func NewFromFile(path string) (*Repository, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return NewFromReader(f)
+}
+
+func NewFromReader(r io.Reader) (*Repository, error) {
+	records, err := csv.NewReader(r).ReadAll()
 	if err != nil {
 		return nil, err
 	}

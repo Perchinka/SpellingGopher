@@ -2,6 +2,8 @@
 
 A Monkeytype-style terminal typing game, written in Go
 
+![demo](demo/demo.gif)
+
 ## Install
 
 ### Quick install (Linux / macOS)
