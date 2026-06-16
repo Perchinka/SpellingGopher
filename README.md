@@ -38,6 +38,23 @@ sudo pacman -U spelling-gopher_*_linux_amd64.pkg.tar.zst
 sudo apk add --allow-untrusted spelling-gopher_*_linux_amd64.apk
 ```
 
+### Quick install (Windows)
+
+In PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/Perchinka/SpellingGopher/main/install.ps1 | iex
+```
+
+Installs to `%LOCALAPPDATA%\Programs\spelling-gopher` and adds it to your user
+`PATH` (override the location with `$Env:InstallDir`). Restart your terminal
+afterwards so the new `PATH` takes effect.
+
+Prefer to do it by hand? Download the matching
+`spelling-gopher_*_windows_amd64.zip` (or `arm64`) from the
+[latest release](https://github.com/Perchinka/SpellingGopher/releases/latest),
+extract it, and place `spelling-gopher.exe` somewhere on your `PATH`.
+
 ### Go
 
 ```sh
